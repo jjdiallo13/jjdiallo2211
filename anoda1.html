@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Retro Ghibli Love</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Pacifico&display=swap');
+
+        body {
+            font-family: 'Pacifico', cursive;
+            background-color: #f0e6d2;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+            position: relative;
+        }
+        .container {
+            text-align: center;
+            background-color: #d1adb6;
+            padding: 2rem;
+            border-radius: 1rem;
+            box-shadow: 0 0 20px rgba(0,0,0,0.2);
+            z-index: 1;
+            position: relative;
+        }
+        h1 {
+            color: #4a4a4a;
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+        #quote {
+            font-style: italic;
+            color: #6a6a6a;
+            margin: 1rem 0;
+            font-size: 1.2rem;
+            position: relative;
+            z-index: 2;
+        }
+        button {
+            background-color: #ff9999;
+            color: #b82763;
+            border: none;
+            padding: 0.7rem 1.5rem;
+            border-radius: 2rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: 'Pacifico', cursive;
+            font-size: 1rem;
+            position: relative;
+            overflow: hidden;
+        }
+        button::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: #d896ff;
+            z-index: -1;
+            filter: blur(10px);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        button:hover::before {
+            opacity: 0.7;
+        }
+        button:hover {
+            background-color: #ff6666;
+            transform: scale(1.05);
+            color: #fff;
+        }
+        .heart {
+            font-size: 2.5rem;
+            color: #ff6666;
+            animation: pulse 1s infinite;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        .polka-dot {
+            position: absolute;
+            background-color: #FFC0CB;
+            border-radius: 50%;
+            opacity: 0.5;
+        }
+        .kiss {
+            position: absolute;
+            font-size: 24px;
+            opacity: 0;
+            transition: all 0.5s ease-out;
+            z-index: 3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Hi Purple</h1>
+        <div class="heart">❤️</div>
+        <p id="quote">i miss youuu click the button</p>
+        <button onclick="generateQuote()">you so cute,click me</button>
+    </div>
+
+<script>
+    const originalQuotes = [
+        "Your hands look better on my waist.",
+        "Hi pretty boy, I LOVE YOU.",
+        "I'm always trying to understand how you can be so adorable and hot at the same time.",
+        "If you were a fruit youd be a fine apple",
+        "I shuffle the playlist you made me whenever I miss you. That's all the time btw.",
+        "I smile like an idiot when talking to you.",
+        "Currently learning how to teleport to you.",
+        "Hugging you through the screen rn",
+        "Are you an alien?  cause you abductedd my heart",
+        "I love you so much, I can't believe I'm doing this",
+        "Truth be told you could be a fashion model",
+        "If I was a cat, I'd spend all of my nine lives with you.",
+        "You make my dopamine levels go silly."
+    ];
+
+    let availableQuotes = [...originalQuotes];
+
+    function generateQuote() {
+        const quoteElement = document.getElementById('quote');
+        
+        if (availableQuotes.length === 0) {
+            // All quotes have been shown, display the final message
+            quoteElement.textContent = "i love you forever more baby";
+            createKissExplosion(quoteElement);
+            return;
+        }
+
+        const randomIndex = Math.floor(Math.random() * availableQuotes.length);
+        const selectedQuote = availableQuotes[randomIndex];
+        
+        // Remove the selected quote from the available quotes
+        availableQuotes.splice(randomIndex, 1);
+
+        quoteElement.textContent = selectedQuote;
+        createKissExplosion(quoteElement);
+    }
+
+    function createKissExplosion(element) {
+        const rect = element.getBoundingClientRect();
+        const centerX = rect.left + rect.width / 2;
+        const centerY = rect.top + rect.height / 2;
+
+        for (let i = 0; i < 20; i++) {
+            const kiss = document.createElement('div');
+            kiss.textContent = '❤️';  // Changed to heart emoji for iOS style
+            kiss.classList.add('kiss');
+            element.appendChild(kiss);  // Append to the quote element instead of body
+
+            const angle = Math.random() * Math.PI * 2;
+            const distance = Math.random() * 50 + 30;  // Reduced distance to keep hearts closer
+            const startX = Math.cos(angle) * 10;
+            const startY = Math.sin(angle) * 10;
+            const endX = Math.cos(angle) * distance;
+            const endY = Math.sin(angle) * distance;
+
+            kiss.style.left = `calc(50% + ${startX}px)`;
+            kiss.style.top = `calc(50% + ${startY}px)`;
+
+            setTimeout(() => {
+                kiss.style.opacity = '1';
+                kiss.style.transform = `translate(${endX}px, ${endY}px) scale(0.5)`;
+            }, 50);
+
+            setTimeout(() => {
+                kiss.remove();
+            }, 1000);
+        }
+    }
+
+    function createPolkaDots() {
+        for (let i = 0; i < 100; i++) {
+            const dot = document.createElement('div');
+            dot.classList.add('polka-dot');
+            const size = Math.random() * 20 + 5; // Random size between 5px and 25px
+            dot.style.width = `${size}px`;
+            dot.style.height = `${size}px`;
+            dot.style.left = `${Math.random() * 100}vw`;
+            dot.style.top = `${Math.random() * 100}vh`;
+            document.body.appendChild(dot);
+        }
+    }
+
+    // Call createPolkaDots when the page loads
+    window.addEventListener('load', createPolkaDots);
+</script>
+</body>
+</html>
